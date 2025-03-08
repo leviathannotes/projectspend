@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spending by Economic Category</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Load Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Make the chart container reasonably large */
+    .chart-container {
+      width: 80%;
+      max-width: 1200px;
+      margin: 0 auto; 
+      height: 500px; /* Adjust as desired */
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo-container">
+      <a href="leviathan.html">
+        <img src="logo.png" alt="Logo" class="nav-logo" />
+      </a>
+    </div>
+    <div class="nav-links-container">
+      <ul>
+        <li><a href="spend.html">Project Spend Home</a></li>
+	<li><a href="time.html">Spend Through Time</a></li>
+        <li><a href="department.html">Spend by Department</a></li>
+        <li><a href="category.html">Economic Category Spend</a></li>
+        <li><a href="function.html">Spend by Function</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- FIRST CHART & TABLE -->
+  <h1>Spending by Economic Category (PESA)</h1>
+  <p>
+    Source Data: All data on this webpage sourced from HM Treasury Public Expenditure Statistical Analyses (PESA).
+    The data on this page is sourced from the 2024 PESA Table 5.3 Public sector expenditure on services
+    by economic category, 2019-20 to 2023-24. 
+  </p>
+
+  <div class="chart-container">
+    <canvas id="spendingChart"></canvas>
+  </div>
+
+  <table id="spendingTable">
+    <thead>
+      <tr>
+        <th>Economic Category</th>
+        <th>2023-24 (£m)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Current grants to persons and non-profit bodies</td><td>320,908</td></tr>
+      <tr><td>Gross current procurement</td><td>305,174</td></tr>
+      <tr><td>Pay</td><td>262,330</td></tr>
+      <tr><td>Public sector debt interest</td><td>121,075</td></tr>
+      <tr><td>Gross capital procurement</td><td>101,983</td></tr>
+      <tr><td>Capital grants</td><td>24,929</td></tr>
+      <tr><td>Subsidies to private sector companies</td><td>19,374</td></tr>
+      <tr><td>Current grants abroad</td><td>12,546</td></tr>
+      <tr><td>Other</td><td>48,455</td></tr>
+    </tbody>
+  </table>
+
+  <!-- SECOND CHART & TABLE -->
+  <h1>Spend by Economic Category (OSCAR)</h1>
+  <p>Source Data: the below chart and table data is sourced from the fourth quarterly OSCAR transparency release for 2023 to 2024, published in June 2024.</p>
+
+  <div class="chart-container">
+    <canvas id="additionalSpendingChart"></canvas>
+  </div>
+
+  <h3>Detailed Additional Spending</h3>
+  <table id="additionalSpendingTable">
+    <thead>
+      <tr>
+        <th>Economic Category</th>
+        <th>2023-24 (£m)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Current grants to persons and non-profit (NET)</td><td>317,288</td></tr>
+      <tr><td>Purchase of goods and services</td><td>202,027</td></tr>
+      <tr><td>Staff costs</td><td>190,370</td></tr>
+      <tr><td>Current grants to local government (NET)</td><td>123,343</td></tr>
+      <tr><td>Depreciation</td><td>108,361</td></tr>
+      <tr><td>Other non-budget</td><td>92,169</td></tr>
+      <tr><td>Purchase of assets</td><td>62,188</td></tr>
+      <tr><td>Unwinding of discount rate on pension scheme liab</td><td>54,688</td></tr>
+      <tr><td>Capital support for public corporations</td><td>45,776</td></tr>
+      <tr><td>Change in pension scheme liabilities</td><td>44,937</td></tr>
+      <tr><td>Net lending to the private sector and abroad</td><td>30,232</td></tr>
+      <tr><td><b>Other</b></td><td>-110,894</td></tr>
+      <!-- Indented sub-items (excluded from second chart) -->
+      <tr><td style="padding-left: 40px;">Subsidies to private sector companies</td><td style="padding-left: 40px;">15,782</td></tr>
+      <tr><td style="padding-left: 40px;">Capital support for local government (NET)</td><td style="padding-left: 40px;">15,583</td></tr>
+      <tr><td style="padding-left: 40px;">Current grants abroad (NET)</td><td style="padding-left: 40px;">14,334</td></tr>
+      <tr><td style="padding-left: 40px;">Subsidies to public corporations</td><td style="padding-left: 40px;">3,266</td></tr>
+      <tr><td style="padding-left: 40px;">Rentals</td><td style="padding-left: 40px;">2,907</td></tr>
+      <tr><td style="padding-left: 40px;">Capital grants to private sector companies (NET)</td><td style="padding-left: 40px;">2,867</td></tr>
+      <tr><td style="padding-left: 40px;">Capital grants to persons & non-profit (NET)</td><td style="padding-left: 40px;">2,770</td></tr>
+      <tr><td style="padding-left: 40px;">Net public service pensions</td><td style="padding-left: 40px;">2,423</td></tr>
+      <tr><td style="padding-left: 40px;">Capital grants abroad (NET)</td><td style="padding-left: 40px;">2,385</td></tr>
+      <tr><td style="padding-left: 40px;">Other capital</td><td style="padding-left: 40px;">1,821</td></tr>
+      <tr><td style="padding-left: 40px;">Income from sales of assets</td><td style="padding-left: 40px;">-3,828</td></tr>
+      <tr><td style="padding-left: 40px;">Release of provision</td><td style="padding-left: 40px;">-21,660</td></tr>
+      <tr><td style="padding-left: 40px;">Other resource</td><td style="padding-left: 40px;">-22,810</td></tr>
+      <tr><td style="padding-left: 40px;">Take up of provisions</td><td style="padding-left: 40px;">-24,483</td></tr>
+      <tr><td style="padding-left: 40px;">n/a</td><td style="padding-left: 40px;">-24,873</td></tr>
+      <tr><td style="padding-left: 40px;">Income from sales of goods and services</td><td style="padding-left: 40px;">-27,924</td></tr>
+      <tr><td style="padding-left: 40px;">Release of provisions covering pension benefits</td><td style="padding-left: 40px;">-49,453</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // -- GLOBAL CHART SETTINGS FOR BETTER READABILITY --
+      Chart.defaults.font.size = 14;
+      Chart.defaults.font.family = 'Arial';
+      Chart.defaults.color = '#333';
+      // Increase devicePixelRatio to make the chart sharper
+      Chart.defaults.devicePixelRatio = 2;
+
+      // ====== FIRST CHART (All 9 data points, multiline labels) ======
+      const ctx1 = document.getElementById("spendingChart").getContext("2d");
+      new Chart(ctx1, {
+        type: "bar",
+        data: {
+          labels: [
+            ["Grants", "(persons/NPB)"],
+            ["Current", "procurement"],
+            ["Pay"],
+            ["Debt", "interest"],
+            ["Capital", "procurement"],
+            ["Capital", "grants"],
+            ["Subsidies"],
+            ["Grants", "abroad"],
+            ["Other"]
+          ],
+          datasets: [{
+            label: "Spending (£m) - 2023-24",
+            data: [
+              320908, // Grants (persons/NPB)
+              305174, // Current procurement
+              262330, // Pay
+              121075, // Debt interest
+              101983, // Capital procurement
+              24929,  // Capital grants
+              19374,  // Subsidies
+              12546,  // Grants abroad
+              48455   // Other
+            ],
+            backgroundColor: [
+              "#4e79a7","#f28e2b","#e15759","#76b7b2","#59a14f",
+              "#edc948","#b07aa1","#ff9da7","#9c755f"
+            ],
+            borderColor: "#ffffff",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // ====== SECOND CHART (Exclude negative “Other”, multiline labels) ======
+      const ctx2 = document.getElementById("additionalSpendingChart").getContext("2d");
+      new Chart(ctx2, {
+        type: "bar",
+        data: {
+          // Excluding “Other” since it’s negative
+          labels: [
+            ["Grants", "(persons/NPB NET)"],
+            ["Purchase", "of G&S"],
+            ["Staff", "costs"],
+            ["Local govt", "grants (NET)"],
+            ["Depreciation"],
+            ["Other", "non-budget"],
+            ["Purchase", "of assets"],
+            ["Unwind", "pension disc."],
+            ["Capital", "support (pub corp)"],
+            ["Change", "pension liab."],
+            ["Net lending", "(priv/abroad)"]
+          ],
+          datasets: [{
+            label: "Spending (£m) - 2023-24",
+            data: [
+              317288, // Grants (persons/NPB NET)
+              202027, // Purchase of goods and services
+              190370, // Staff costs
+              123343, // Current grants to local government (NET)
+              108361, // Depreciation
+              92169,  // Other non-budget
+              62188,  // Purchase of assets
+              54688,  // Unwinding of discount rate
+              45776,  // Capital support for public corporations
+              44937,  // Change in pension scheme liabilities
+              30232   // Net lending
+            ],
+            backgroundColor: [
+              "#4e79a7","#f28e2b","#e15759","#76b7b2","#59a14f",
+              "#edc948","#b07aa1","#ff9da7","#9c755f","#bab0ab",
+              "#1f77b4"
+            ],
+            borderColor: "#ffffff",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

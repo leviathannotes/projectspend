@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spend by Department</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    /* Sidebar styling – starts below the horizontal nav bar */
+    .sidebar {
+      height: 100%;
+      width: 250px;
+      position: fixed;
+      z-index: 1000;
+      top: 60px; /* Starts just below the nav bar */
+      left: 0;
+      background-color: #6DB6FF; /* New color */
+      overflow-x: hidden;
+      overflow-y: auto;  /* Allow vertical scrolling */
+      padding-top: 20px;
+      transition: 0.3s;
+    }.sidebar {
+  position: fixed;
+  top: 60px; /* below the horizontal nav */
+  left: 0;
+  width: 250px;
+  height: calc(100% - 60px); /* subtract nav bar height */
+  background-color: #6DB6FF;
+  overflow-x: hidden;
+  overflow-y: auto; /* makes the sidebar scrollable */
+  padding-top: 20px;
+  transition: 0.3s;
+  box-sizing: border-box; /* ensure padding is included in height */
+}
+    .sidebar a {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 18px;
+      color: #fff;
+      display: block;
+      transition: 0.2s;
+    }
+    .sidebar a:hover {
+      color: #eee;
+    }
+    /* Toggle button styling */
+    .togglebtn {
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #6DB6FF;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      position: fixed;
+      top: 70px; /* Below the horizontal nav bar */
+      left: 10px;
+      z-index: 1100;
+    }
+    /* Main content shifted right when sidebar is open */
+    .main-content {
+      margin-left: 260px;
+      padding: 20px;
+      transition: margin-left 0.3s;
+    }
+    /* Mobile adjustments: hide sidebar by default and show toggle button */
+    @media screen and (max-width: 768px) {
+      .sidebar {
+        width: 0;
+        padding-top: 60px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+  </style>
+  <script>
+    // Toggle function: if sidebar is open, close it; if closed, open it.
+    function toggleSidebar() {
+      var sidebar = document.getElementById("mySidebar");
+      var main = document.getElementById("mainContent");
+      if (sidebar.style.width === "250px") {
+        sidebar.style.width = "0";
+        main.style.marginLeft = "0";
+      } else {
+        sidebar.style.width = "250px";
+        main.style.marginLeft = "260px";
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Existing Horizontal Navigation -->
+  <nav>
+    <div class="logo-container">
+      <a href="leviathan.html">
+        <img src="logo.png" alt="Logo" class="nav-logo" />
+      </a>
+    </div>
+    <div class="nav-links-container">
+      <ul>
+        <li><a href="spend.html">Project Spend Home</a></li>
+        <li><a href="time.html">Spend Through Time</a></li>
+        <li><a href="department.html">Spend by Department</a></li>
+        <li><a href="category.html">Economic Category Spend</a></li>
+        <li><a href="function.html">Spend by Function</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidebar toggle button (always visible on desktop) -->
+  <button class="togglebtn" onclick="toggleSidebar()">☰ Departments</button>
+
+  <!-- Vertical Sidebar Navigation -->
+  <div id="mySidebar" class="sidebar">
+    <a href="Departments.html">Departments</a>
+    <a href="Attorney_Generals_Office.html">Attorney Generals Office</a>
+    <a href="Cabinet_Office.html">Cabinet Office</a>
+    <a href="DBT.html">DBT</a>
+    <a href="DCMS.html">DCMS</a>
+    <a href="DEFRA.html">DEFRA</a>
+    <a href="DESNZ.html">DESNZ</a>
+    <a href="DfE.html">DfE</a>
+    <a href="DfT.html">DfT</a>
+    <a href="DHSC.html">DHSC</a>
+    <a href="DLUHC.html">DLUHC</a>
+    <a href="DSIT.html">DSIT</a>
+    <a href="DWP.html">DWP</a>
+    <a href="FCDO.html">FCDO</a>
+    <a href="HMT.html">HMT</a>
+    <a href="Home_Office.html">Home Office</a>
+    <a href="MoD.html">MoD</a>
+    <a href="MoJ.html">MoJ</a>
+    <a href="Northern_Ireland.html">Northern Ireland</a>
+    <a href="Parliament.html">Parliament</a>
+    <a href="Scotland.html">Scotland</a>
+    <a href="UK_Export_Finance.html">UK Export Finance</a> 
+    <a href="Wales.html">Wales</a> <!-- Replaced "Wales_Office.html" with "Wales.html" -->
+  </div>
+
+  <!-- Main Content Area -->
+  <div id="mainContent" class="main-content">
+    <h1 style="text-align: center;">Spend by Department 2023-2024</h1>
+    <p style="text-align: center;"><b>Source Data:</b> All data is sourced from the HM Treasury OSCAR transparency release for 2023 to 2024, published in June 2024.</p>
+
+    <!-- Treemap Section -->
+    <div class="chart-container" style="width:100%; max-width:1000px; height:60vh; min-height:400px; max-height:800px; margin-bottom:1rem;">
+      <div id="departmentTreemap" style="width:100%; height:100%;"></div>
+    </div>
+
+    <!-- First Table (Department Spend) -->
+    <table id="spendingTable" style="width:100%; max-width:1000px; border-collapse:collapse; margin-bottom:1rem;">
+      <thead>
+        <tr>
+          <th>Department</th>
+          <th>23-24 Spend (£m)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>DWP</td><td>280,839</td></tr>
+        <tr><td>DHSC</td><td>184,055</td></tr>
+        <tr><td>DfE</td><td>145,000</td></tr>
+        <tr><td>HMT</td><td>123,024</td></tr>
+        <tr><td>Scotland</td><td>84,277</td></tr>
+        <tr><td>MoD</td><td>63,263</td></tr>
+        <tr><td>Northern Ireland</td><td>51,074</td></tr>
+        <tr><td>Wales</td><td>44,243</td></tr> <!-- Replaced "Wales Office" -->
+        <tr><td>DfT</td><td>42,795</td></tr>
+        <tr><td>DLUHC</td><td>41,757</td></tr>
+        <tr><td>Home Office</td><td>24,506</td></tr>
+        <tr><td>DCMS</td><td>14,791</td></tr>
+        <tr><td>DSIT</td><td>13,406</td></tr>
+        <tr><td>MoJ</td><td>13,291</td></tr>
+        <tr><td>FCDO</td><td>13,117</td></tr>
+        <tr><td>Cabinet Office</td><td>11,452</td></tr>
+        <tr><td>DEFRA</td><td>10,067</td></tr>
+        <tr><td>DBT</td><td>4,340</td></tr>
+        <tr><td>Parliament</td><td>1,596</td></tr>
+        <tr><td>Attorney Generals Office</td><td>929</td></tr>
+        <tr><td>UK Export Finance</td><td>274</td></tr>
+        <tr><td>DESNZ</td><td>-7,610</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Bottom Note immediately below first table -->
+    <p style="max-width:1000px; margin:0.5rem auto; text-align:center;">
+      <b>Note:</b> DESNZ is not included in the treemap as it has a negative spend total in 23-24. The breakdown of DESNZ spend is provided on the DESNZ page.</b>
+    </p>
+
+    <!-- Departmental Mapping Section -->
+    <h2 style="text-align: center;">Departmental Mapping</h2>
+    <p style="text-align: center;">
+      Departmental figures include figures for bodies which fall under the Department which submit data to the OSCAR system. The full mapping of bodies to Departments has been included below:
+    </p>
+    <!-- Second Table (Mapping) -->
+    <table style="width:100%; max-width:1000px; border-collapse:collapse; margin-bottom:2rem;">
+      <thead>
+        <tr>
+          <th>Mapped Name in Project Spend</th>
+          <th>OSCAR Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Attorney General’s Office</td><td>Crown Prosecution Service</td></tr>
+        <tr><td>Attorney General’s Office</td><td>HM Procurator General and Treasury Solicitor</td></tr>
+        <tr><td>Attorney General’s Office</td><td>Serious Fraud Office</td></tr>
+        <tr><td>Cabinet Office</td><td>Cabinet Office</td></tr>
+        <tr><td>Cabinet Office</td><td>Cabinet Office: Civil Superannuation</td></tr>
+        <tr><td>DBT</td><td>Competition and Markets Authority</td></tr>
+        <tr><td>DBT</td><td>Department for Business and Trade</td></tr>
+        <tr><td>DBT</td><td>HM Land Registry</td></tr>
+        <tr><td>DBT</td><td>Royal Mail Statutory Pension Scheme</td></tr>
+        <tr><td>DCMS</td><td>Charity Commission</td></tr>
+        <tr><td>DCMS</td><td>Department for Culture, Media and Sport</td></tr>
+        <tr><td>DCMS</td><td>The National Archives</td></tr>
+        <tr><td>DfE</td><td>Department for Education</td></tr>
+        <tr><td>DfE</td><td>Office for Standards In Education, Children's Services and Skills</td></tr>
+        <tr><td>DfE</td><td>Office of Qualifications and Examinations Regulation</td></tr>
+        <tr><td>DfE</td><td>Teachers' Pension Scheme (England and Wales)</td></tr>
+        <tr><td>DESNZ</td><td>Department for Energy Security and Net Zero</td></tr>
+        <tr><td>DESNZ</td><td>Office of Gas and Electricity Markets</td></tr>
+        <tr><td>DEFRA</td><td>Department for Environment, Food and Rural Affairs</td></tr>
+        <tr><td>DEFRA</td><td>Water Services Regulation Authority</td></tr>
+        <tr><td>DLUHC</td><td>Department for Levelling Up, Housing and Communities</td></tr>
+        <tr><td>DLUHC</td><td>Local Government Boundary Commission for England</td></tr>
+        <tr><td>DSIT</td><td>Department for Science, Innovation and Technology</td></tr>
+        <tr><td>DSIT</td><td>United Kingdom Atomic Energy Authority Pension Schemes</td></tr>
+        <tr><td>DfT</td><td>Department for Transport</td></tr>
+        <tr><td>DfT</td><td>Office of Rail and Road</td></tr>
+        <tr><td>DWP</td><td>Department for Work and Pensions</td></tr>
+        <tr><td>DHSC</td><td>Department of Health and Social Care</td></tr>
+        <tr><td>DHSC</td><td>Food Standards Agency</td></tr>
+        <tr><td>DHSC</td><td>National Health Service Pension Scheme</td></tr>
+        <tr><td>FCDO</td><td>Foreign, Commonwealth and Development Office</td></tr>
+        <tr><td>FCDO</td><td>Foreign, Commonwealth and Development Office: Overseas Superannuation</td></tr>
+        <tr><td>HMT</td><td>Crown Estate Office</td></tr>
+        <tr><td>HMT</td><td>Government Actuary's Department</td></tr>
+        <tr><td>HMT</td><td>HM Revenue and Customs</td></tr>
+        <tr><td>HMT</td><td>HM Treasury</td></tr>
+        <tr><td>HMT</td><td>National Savings and Investments</td></tr>
+        <tr><td>Home Office</td><td>Home Office</td></tr>
+        <tr><td>Home Office</td><td>National Crime Agency</td></tr>
+        <tr><td>MoD</td><td>Armed Forces Pension and Compensation Schemes</td></tr>
+        <tr><td>MoD</td><td>Ministry of Defence</td></tr>
+        <tr><td>MoJ</td><td>Ministry of Justice</td></tr>
+        <tr><td>MoJ</td><td>Ministry of Justice: Judicial Pensions Scheme</td></tr>
+        <tr><td>MoJ</td><td>United Kingdom Supreme Court</td></tr>
+        <tr><td>Northern Ireland</td><td>Northern Ireland Executive</td></tr>
+        <tr><td>Northern Ireland</td><td>Northern Ireland Office</td></tr>
+        <tr><td>Parliament</td><td>House of Commons: Administration</td></tr>
+        <tr><td>Parliament</td><td>House of Commons: Members</td></tr>
+        <tr><td>Parliament</td><td>House of Lords</td></tr>
+        <tr><td>Parliament</td><td>Independent Parliamentary Standards Authority</td></tr>
+        <tr><td>Parliament</td><td>National Audit Office</td></tr>
+        <tr><td>Parliament</td><td>Office of The Parliamentary Commissioner</td></tr>
+        <tr><td>Parliament</td><td>Parliamentary Works Grant</td></tr>
+        <tr><td>Parliament</td><td>The Statistics Board</td></tr>
+        <tr><td>Scotland</td><td>Scotland Office and Office of the Advocate General</td></tr>
+        <tr><td>Scotland</td><td>Scottish Government</td></tr>
+        <tr><td>UK Export Finance</td><td>UK Export Finance</td></tr>
+        <tr><td>Wales</td><td>Wales Office</td></tr>
+        <tr><td>Wales</td><td>Welsh Government</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      google.charts.load('current', { packages: ["treemap"] });
+      google.charts.setOnLoadCallback(drawChart);
+      let tree;
+      let data;
+      function drawChart() {
+        data = google.visualization.arrayToDataTable([
+          ['Department', 'Parent', 'Spend (m)'],
+          ['Departments', null, 0],
+          ['DWP\n£280,839m', 'Departments', 280839],
+          ['DHSC\n£184,055m', 'Departments', 184055],
+          ['DfE\n£145,000m', 'Departments', 145000],
+          ['HMT\n£123,024m', 'Departments', 123024],
+          ['Scotland\n£84,277m', 'Departments', 84277],
+          ['MoD\n£63,263m', 'Departments', 63263],
+          ['Northern Ireland\n£51,074m', 'Departments', 51074],
+          ['Wales\n£44,243m', 'Departments', 44243], <!-- replaced "Wales Office" -->
+          ['DfT\n£42,795m', 'Departments', 42795],
+          ['DLUHC\n£41,757m', 'Departments', 41757],
+          ['Home Office\n£24,506m', 'Departments', 24506],
+          ['DCMS\n£14,791m', 'Departments', 14791],
+          ['DSIT\n£13,406m', 'Departments', 13406],
+          ['MoJ\n£13,291m', 'Departments', 13291],
+          ['FCDO\n£13,117m', 'Departments', 13117],
+          ['Cabinet Office\n£11,452m', 'Departments', 11452],
+          ['DEFRA\n£10,067m', 'Departments', 10067],
+          ['DBT\n£4,340m', 'Departments', 4340],
+          ['Parliament\n£1,596m', 'Departments', 1596],
+          ['Attorney Generals Office\n£929m', 'Departments', 929],
+          ['UK Export Finance\n£274m', 'Departments', 274],
+          ['DESNZ\n£-7,610m', 'Departments', -7610]
+        ]);
+        tree = new google.visualization.TreeMap(document.getElementById('departmentTreemap'));
+        tree.draw(data, {
+          colorMode: 'size',
+          minColor: '#FFE8D9',
+          midColor: '#FFAA71',
+          maxColor: '#FF7619',
+          minColorValue: 0,
+          maxColorValue: 280839,
+          showScale: false,
+          headerHeight: 0,
+          fontColor: 'black',
+          fontSize: 12,
+          useWeightedAverageForAggregation: false
+        });
+      }
+      window.addEventListener('resize', function() {
+        if (tree && data) {
+          tree.draw(data, {
+            colorMode: 'size',
+            minColor: '#FFE8D9',
+            midColor: '#FFAA71',
+            maxColor: '#FF7619',
+            minColorValue: 0,
+            maxColorValue: 280839,
+            showScale: false,
+            headerHeight: 0,
+            fontColor: 'black',
+            fontSize: 12,
+            useWeightedAverageForAggregation: false
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

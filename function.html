@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spending by Function</title>
+  <!-- Link to your external CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js (left in place as per original code) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Google Charts loader -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo-container">
+      <a href="leviathan.html">
+        <img src="logo.png" alt="Logo" class="nav-logo" />
+      </a>
+    </div>
+    <div class="nav-links-container">
+      <ul>
+        <li><a href="spend.html">Project Spend Home</a></li>
+        <li><a href="time.html">Spend Through Time</a></li>
+        <li><a href="department.html">Spend by Department</a></li>
+        <li><a href="category.html">Economic Category Spend</a></li>
+        <li><a href="function.html">Spend by Function</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Title -->
+  <h1>Total Spending by Function 2023-2024</h1>
+
+  <!-- Source Note -->
+  <p>
+    Source Data: All data is sourced from HM Treasury Public Expenditure Statistical Analyses (PESA).
+    The data on this page is sourced from the 2024 PESA Table 4.2 Public sector expenditure on services
+    by function, 2001-02 to 2023-24.
+  </p>
+
+  <!-- Chart Container (100% width) -->
+  <div class="chart-container" style="width:100%; margin:0 auto; padding:0;">
+    <div id="spendingChart" style="width:100%; height:600px;"></div>
+  </div>
+
+  <!-- Data Table (also set to 100% width) -->
+  <table id="spendingTable" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>£bn 23-24</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Social protection</td><td>360.9</td></tr>
+      <tr><td>Health</td><td>221.0</td></tr>
+      <tr><td>Public sector debt interest</td><td>121.1</td></tr>
+      <tr><td>Education</td><td>111.5</td></tr>
+      <tr><td>Economic affairs</td><td>91.8</td></tr>
+      <tr><td>Defence</td><td>56.8</td></tr>
+      <tr><td>Public order and safety</td><td>47.7</td></tr>
+      <tr><td>General public services (exc Debt Interest)</td><td>36.8</td></tr>
+      <tr><td>Housing and community amenities</td><td>19.9</td></tr>
+      <tr><td>Environment protection</td><td>15.3</td></tr>
+      <tr><td>Recreation, culture and religion</td><td>13.0</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Bottom Notes -->
+  <p>
+    <b>Note:</b> The following items have been excluded from the above table, but their inclusion
+    reconciles the total to TME (Total Managed Expenditure): EU transactions of -£0.3bn and
+    Accounting Adjustments of £121.3bn.
+  </p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Load Google Charts and the treemap package
+      google.charts.load('current', { packages: ["treemap"] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Function', 'Parent', 'Spending'],
+          ['Spending', null, 0],
+          ['Social protection\n£360.9bn', 'Spending', 360.9],
+          ['Health\n£221.0bn', 'Spending', 221.0],
+          ['Public sector debt interest\n£121.1bn', 'Spending', 121.1],
+          ['Education\n£111.5bn', 'Spending', 111.5],
+          ['Economic affairs\n£91.8bn', 'Spending', 91.8],
+          ['Defence\n£56.8bn', 'Spending', 56.8],
+          ['Public order & safety\n£47.7bn', 'Spending', 47.7],
+          ['Gen public services\n£36.8bn', 'Spending', 36.8],
+          ['Housing & community\n£19.9bn', 'Spending', 19.9],
+          ['Environment protection\n£15.3bn', 'Spending', 15.3],
+          ['Recreation & culture\n£13.0bn', 'Spending', 13.0]
+        ]);
+
+        var tree = new google.visualization.TreeMap(document.getElementById('spendingChart'));
+        tree.draw(data, {
+          colorMode: 'size',
+          minColor: '#FFE8D9',
+          midColor: '#FFAA71',
+          maxColor: '#FF7619',
+          minColorValue: 0,
+          maxColorValue: 360.9,
+          showScale: false,
+          headerHeight: 0,
+          fontColor: 'black',
+          fontSize: 12,
+          useWeightedAverageForAggregation: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

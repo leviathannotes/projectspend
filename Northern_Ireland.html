@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spend by Department – Northern Ireland</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    /* Sidebar styling – remains unchanged */
+    .sidebar {
+      position: fixed;
+      top: 60px; /* below horizontal nav */
+      left: 0;
+      width: 250px;
+      height: calc(100% - 60px);
+      background-color: #6DB6FF;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding-top: 20px;
+      transition: 0.3s;
+      box-sizing: border-box;
+    }
+    .sidebar a {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 18px;
+      color: #fff;
+      display: block;
+      transition: 0.2s;
+    }
+    .sidebar a:hover {
+      color: #eee;
+    }
+    /* Toggle button styling */
+    .togglebtn {
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #6DB6FF;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      position: fixed;
+      top: 70px;
+      left: 10px;
+      z-index: 1100;
+    }
+    /* Main content area */
+    .main-content {
+      margin-left: 260px;
+      padding: 20px;
+      transition: margin-left 0.3s;
+    }
+    @media screen and (max-width: 768px) {
+      .sidebar { width: 0; padding-top: 60px; }
+      .main-content { margin-left: 0; }
+    }
+    /* Chart container */
+    .chart-container {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 1rem;
+    }
+  </style>
+  <script>
+    // Sidebar toggle
+    function toggleSidebar() {
+      var sidebar = document.getElementById("mySidebar");
+      var main = document.getElementById("mainContent");
+      if (sidebar.style.width === "250px") {
+        sidebar.style.width = "0";
+        main.style.marginLeft = "0";
+      } else {
+        sidebar.style.width = "250px";
+        main.style.marginLeft = "260px";
+      }
+    }
+  </script>
+  <script>
+    // Load Google Charts packages
+    google.charts.load('current', { packages: ["treemap", "corechart"] });
+    google.charts.setOnLoadCallback(drawCharts);
+
+    // Format function for 1 decimal place
+    function fmt1d(x) {
+      return x.toLocaleString("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    }
+
+    // Dynamic data for department
+    // Department total = 51074.146 (£m)
+    // Organization-level data:
+    var orgData = [{"amount": 5.25, "name": "Driver and Vehicle Testing Agency"}, {"amount": 0.658, "name": "Independent Reporting Commission"}, {"amount": 3.722, "name": "NI Human Rights Commission"}, {"amount": 1.404, "name": "NI Parades Commission"}, {"amount": 30304.994, "name": "Northern Ireland Executive"}, {"amount": -1.4799999999999998, "name": "Northern Ireland Housing Executive"}, {"amount": 20424.889, "name": "Northern Ireland Office"}, {"amount": 275.54699999999997, "name": "Northern Ireland Transport Holding Company"}, {"amount": 59.162, "name": "Northern Ireland Trust Ports"}];
+    // PESA Economic Group data:
+    var pesaAll = [{"amount": -63.095000000000006, "code": "CAPITAL GRANTS ABROAD (NET)"}, {"amount": 105.61699999999999, "code": "CAPITAL GRANTS TO PERSONS \u0026 NON-PROFIT (NET)"}, {"amount": 175.376, "code": "CAPITAL GRANTS TO PRIVATE SECTOR COMPANIES (NET)"}, {"amount": 22.777, "code": "CAPITAL SUPPORT FOR LOCAL GOVERNMENT (NET)"}, {"amount": 261.262, "code": "CAPITAL SUPPORT FOR PUBLIC CORPORATIONS"}, {"amount": 1568.896, "code": "CHANGE IN PENSION SCHEME LIABILITIES"}, {"amount": -38.417, "code": "CURRENT GRANTS ABROAD (NET)"}, {"amount": 170.964, "code": "CURRENT GRANTS TO LOCAL GOVERNMENT (NET)"}, {"amount": 9425.960000000001, "code": "CURRENT GRANTS TO PERSONS AND NON-PROFIT (NET)"}, {"amount": 989.732, "code": "DEPRECIATION"}, {"amount": -61.432, "code": "INCOME FROM SALES OF ASSETS"}, {"amount": -1095.866, "code": "INCOME FROM SALES OF GOODS AND SERVICES"}, {"amount": 485.291, "code": "NET LENDING TO THE PRIVATE SECTOR AND ABROAD"}, {"amount": 255.387, "code": "NET PUBLIC SERVICE PENSIONS"}, {"amount": 7.315999999999994, "code": "OTHER CAPITAL"}, {"amount": 20389.752, "code": "OTHER NON-BUDGET"}, {"amount": -230.801, "code": "OTHER RESOURCE"}, {"amount": 1981.8319999999999, "code": "PURCHASE OF ASSETS"}, {"amount": 6113.439, "code": "PURCHASE OF GOODS AND SERVICES"}, {"amount": -311.30400000000003, "code": "RELEASE OF PROVISION"}, {"amount": -1969.326, "code": "RELEASE OF PROVISIONS COVERING PENSION BENEFITS"}, {"amount": 22.529, "code": "RENTALS"}, {"amount": 9129.043, "code": "STAFF COSTS"}, {"amount": 338.891, "code": "SUBSIDIES TO PRIVATE SECTOR COMPANIES"}, {"amount": 189.952, "code": "SUBSIDIES TO PUBLIC CORPORATIONS"}, {"amount": 1176.817, "code": "TAKE UP OF PROVISIONS"}, {"amount": 2030.662, "code": "UNWINDING OF DISCOUNT RATE ON PENSION SCHEME LIAB"}];
+
+    function drawCharts() {
+      buildOrgTable();
+      drawOrgPie();
+      buildPesaTable();
+      drawPesaTreemap();
+    }
+
+    // Build Organization Table (both positives and negatives; here all are positive)
+    function buildOrgTable() {
+      var tbody = document.getElementById("orgTableBody");
+      tbody.innerHTML = "";
+      // Sort orgData descending by amount
+      var sortedOrgs = orgData.slice().sort(function(a, b) { return b.amount - a.amount; });
+      sortedOrgs.forEach(function(item) {
+        if(item.amount === 0) return;
+        var tr = document.createElement("tr");
+        var tdName = document.createElement("td");
+        tdName.textContent = item.name;
+        var tdAmt = document.createElement("td");
+        tdAmt.textContent = fmt1d(item.amount);
+        tr.appendChild(tdName);
+        tr.appendChild(tdAmt);
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Draw Organization Pie Chart (only positives)
+    function drawOrgPie() {
+      var arr = [["Organisation", "Spend (£m)"]];
+      // Only include positive values
+      orgData.forEach(function(item) {
+        if(item.amount > 0) {
+          arr.push([item.name, item.amount]);
+        }
+      });
+      var data = google.visualization.arrayToDataTable(arr);
+      var options = {
+        is3D: false,
+        legend: { position: 'right', alignment: 'center' },
+        tooltip: { text: 'both' },
+        pieSliceText: 'none',
+        chartArea: { left: '5%', top: '5%', width: '90%', height: '90%' }
+      };
+      var chart = new google.visualization.PieChart(document.getElementById("organisationPieChart"));
+      chart.draw(data, options);
+    }
+
+    // Build PESA Table (include both positives and negatives; zero excluded)
+    function buildPesaTable() {
+      var tbody = document.getElementById("pesaTableBody");
+      tbody.innerHTML = "";
+      var combined = pesaAll.slice().sort(function(a, b) { return b.amount - a.amount; });
+      combined.forEach(function(item) {
+        if(item.amount === 0) return;
+        var tr = document.createElement("tr");
+        var tdCode = document.createElement("td");
+        tdCode.textContent = item.code;
+        var tdAmt = document.createElement("td");
+        tdAmt.textContent = fmt1d(item.amount);
+        tr.appendChild(tdCode);
+        tr.appendChild(tdAmt);
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Draw PESA Treemap (only positives)
+    function drawPesaTreemap() {
+      var arr = [["Category", "Parent", "Spend (£m)"]];
+      arr.push(["Categories", null, 0]);
+      // Only include positive PESA entries
+      pesaAll.filter(function(item) { return item.amount > 0; })
+             .sort(function(a, b) { return b.amount - a.amount; })
+             .forEach(function(item) {
+        arr.push([item.code + "\n£" + fmt1d(item.amount), "Categories", item.amount]);
+      });
+      var data = google.visualization.arrayToDataTable(arr);
+      var maxPos = Math.max.apply(null, pesaAll.filter(function(item){ return item.amount > 0; }).map(function(item){ return item.amount; }));
+      var tree = new google.visualization.TreeMap(document.getElementById("departmentTreemap"));
+      tree.draw(data, {
+        colorMode: "size",
+        minColor: "#FFE8D9",
+        midColor: "#FFAA71",
+        maxColor: "#FF7619",
+        minColorValue: 0,
+        maxColorValue: maxPos,
+        showScale: false,
+        headerHeight: 0,
+        fontColor: "black",
+        fontSize: 12,
+        useWeightedAverageForAggregation: false
+      });
+    }
+  </script>
+</head>
+<body>
+  <!-- Horizontal Navigation (unchanged) -->
+  <nav>
+    <div class="logo-container">
+      <a href="leviathan.html"><img src="logo.png" alt="Logo" class="nav-logo"></a>
+    </div>
+    <div class="nav-links-container">
+      <ul>
+        <li><a href="spend.html">Project Spend Home</a></li>
+        <li><a href="time.html">Spend Through Time</a></li>
+        <li><a href="department.html">Spend by Department</a></li>
+        <li><a href="category.html">Economic Category Spend</a></li>
+        <li><a href="function.html">Spend by Function</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Sidebar Toggle Button -->
+  <button class="togglebtn" onclick="toggleSidebar()">☰ Departments</button>
+  <!-- Vertical Sidebar Navigation (FULL) -->
+  <div id="mySidebar" class="sidebar">
+    <a href="Departments.html">Departments</a>
+    <a href="Attorney_Generals_Office.html">Attorney Generals Office</a>
+    <a href="Cabinet_Office.html">Cabinet Office</a>
+    <a href="DBT.html">DBT</a>
+    <a href="DCMS.html">DCMS</a>
+    <a href="DEFRA.html">DEFRA</a>
+    <a href="DESNZ.html">DESNZ</a>
+    <a href="DfE.html">DfE</a>
+    <a href="DfT.html">DfT</a>
+    <a href="DHSC.html">DHSC</a>
+    <a href="DLUHC.html">DLUHC</a>
+    <a href="DSIT.html">DSIT</a>
+    <a href="DWP.html">DWP</a>
+    <a href="FCDO.html">FCDO</a>
+    <a href="HMT.html">HMT</a>
+    <a href="Home_Office.html">Home Office</a>
+    <a href="MoD.html">MoD</a>
+    <a href="MoJ.html">MoJ</a>
+    <a href="Northern_Ireland.html">Northern Ireland</a>
+    <a href="Parliament.html">Parliament</a>
+    <a href="Scotland.html">Scotland</a>
+    <a href="UK_Export_Finance.html">UK Export Finance</a> 
+    <a href="Wales.html">Wales</a> <!-- Replaced "Wales_Office.html" with "Wales.html" -->
+  </div>
+  <!-- Main Content Area -->
+  <div id="mainContent" class="main-content">
+    <!-- Organization Section -->
+    <h1 style="text-align: center;">Northern Ireland Spend by Organisation</h1>
+    <p style="text-align: center;"><b>Source Data:</b> All data is sourced from the HM Treasury OSCAR transparency release for 2023–2024, published in June 2024. Organisations are those shown within the OSCAR dataset and a complete mapping to departments is shown on the Spend by Department page.</p>
+    <div id="organisationSection" style="margin-bottom:2rem;">
+      <div class="chart-container" style="width:100%; max-width:1000px; height:40vh; min-height:300px; max-height:600px; margin-bottom:1rem;">
+        <div id="organisationPieChart" style="width:100%; height:100%;"></div>
+      </div>
+      <table id="organisationTable" style="width:100%; max-width:1000px; border-collapse:collapse; margin-bottom:2rem;">
+        <thead>
+          <tr>
+            <th>Organisation</th>
+            <th>Spend (£m)</th>
+          </tr>
+        </thead>
+        <tbody id="orgTableBody"></tbody>
+      </table>
+    </div>
+    <!-- Category Section -->
+    <h1 style="text-align: center;">Northern Ireland Spend by Category</h1>
+    <p style="text-align: center;"><b>Source Data:</b> All data is sourced from the HM Treasury OSCAR transparency release for 2023–2024, published in June 2024. The Spend by category data uses the spend by PESA economic field data field.</p>
+    <div class="chart-container" style="width:100%; max-width:1000px; height:60vh; min-height:400px; max-height:800px; margin-bottom:1rem;">
+      <div id="departmentTreemap" style="width:100%; height:100%;"></div>
+    </div>
+    <table id="pesaTable" style="width:100%; max-width:1000px; border-collapse:collapse; margin-bottom:1rem;">
+      <thead>
+        <tr>
+          <th>PESA Economic Group Code</th>
+          <th>Spend (£m)</th>
+        </tr>
+      </thead>
+      <tbody id="pesaTableBody"></tbody>
+    </table>
+    <p style="text-align: center;"><b>Note:</b> Negative values are excluded from the treemap but included in the table for completeness.</p>
+  </div>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91d1d67d0cd8bf8c',t:'MTc0MTQzMTcyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

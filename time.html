@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spending Through Time</title>
+  <!-- Link to your external CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo-container">
+      <a href="leviathan.html">
+        <img src="logo.png" alt="Logo" class="nav-logo" />
+      </a>
+    </div>
+    <div class="nav-links-container">
+      <ul>
+        <li><a href="spend.html">Project Spend Home</a></li>
+	<li><a href="time.html">Spend Through Time</a></li>
+        <li><a href="department.html">Spend by Department</a></li>
+        <li><a href="category.html">Economic Category Spend</a></li>
+        <li><a href="function.html">Spend by Function</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Title -->
+  <h1>Spend Through Time (2001 to 2024)</h1>
+
+  <!-- Source Note -->
+  <p>
+    Source Data: All data on the page is sourced from HM Treasury Public Expenditure Statistical Analyses (PESA).
+    The data on this page is sourced from the 2024 PESA Table 4.4 Public sector expenditure on services
+    by function as a per cent of GDP, 2001–02 to 2023–24.
+  </p>
+
+  <!-- Chart Container -->
+  <div class="chart-container">
+    <canvas id="spendingChart"></canvas>
+  </div>
+
+  <!-- Data Table with shortened year labels -->
+  <table id="spendingTable">
+    <thead>
+      <tr>
+        <th></th>
+        <th>01-02</th><th>02-03</th><th>03-04</th><th>04-05</th><th>05-06</th><th>06-07</th>
+        <th>07-08</th><th>08-09</th><th>09-10</th><th>10-11</th><th>11-12</th><th>12-13</th>
+        <th>13-14</th><th>14-15</th><th>15-16</th><th>16-17</th><th>17-18</th><th>18-19</th>
+        <th>19-20</th><th>20-21</th><th>21-22</th><th>22-23</th><th>23-24</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>Total Managed Expenditure (£bn)</b></td>
+        <td>418.8</td><td>454.0</td><td>495.4</td><td>536.0</td><td>566.5</td><td>593.4</td>
+        <td>630.3</td><td>687.9</td><td>723.3</td><td>744.5</td><td>745.8</td><td>760.4</td>
+        <td>767.1</td><td>788.7</td><td>796.6</td><td>813.8</td><td>841.5</td><td>858.2</td>
+        <td>888.4</td><td>1,107.2</td><td>1,047.2</td><td>1,157.4</td><td>1,216.8</td>
+      </tr>
+      <tr>
+        <td><b>Total Managed Expenditure (% of GDP)</b></td>
+        <td>36.3</td><td>37.6</td><td>38.9</td><td>39.9</td><td>39.9</td><td>39.9</td>
+        <td>40.3</td><td>43.5</td><td>46.5</td><td>45.7</td><td>44.6</td><td>44.1</td>
+        <td>42.5</td><td>42.1</td><td>41.2</td><td>40.4</td><td>40.1</td><td>39.5</td>
+        <td>39.6</td><td>53.1</td><td>44.3</td><td>45.3</td><td>44.7</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const ctx = document.getElementById("spendingChart").getContext("2d");
+
+      // Shortened year labels
+      const years = [
+        "01-02","02-03","03-04","04-05","05-06","06-07",
+        "07-08","08-09","09-10","10-11","11-12","12-13",
+        "13-14","14-15","15-16","16-17","17-18","18-19",
+        "19-20","20-21","21-22","22-23","23-24"
+      ];
+
+      // TME in £bn
+      const tmeBillions = [
+        418.8, 454.0, 495.4, 536.0, 566.5, 593.4, 630.3, 687.9, 723.3,
+        744.5, 745.8, 760.4, 767.1, 788.7, 796.6, 813.8, 841.5, 858.2,
+        888.4, 1107.2, 1047.2, 1157.4, 1216.8
+      ];
+
+      // TME as % of GDP
+      const tmePercentGDP = [
+        36.3, 37.6, 38.9, 39.9, 39.9, 39.9, 40.3, 43.5, 46.5,
+        45.7, 44.6, 44.1, 42.5, 42.1, 41.2, 40.4, 40.1, 39.5,
+        39.6, 53.1, 44.3, 45.3, 44.7
+      ];
+
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: years,
+          datasets: [
+            {
+              label: "TME (£bn)",
+              data: tmeBillions,
+              borderColor: "#4e79a7",
+              backgroundColor: "#4e79a7",
+              yAxisID: "y",
+              fill: false,
+              tension: 0.1
+            },
+            {
+              label: "TME (% of GDP)",
+              data: tmePercentGDP,
+              borderColor: "#e15759",
+              backgroundColor: "#e15759",
+              yAxisID: "y1",
+              fill: false,
+              tension: 0.1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: "TME in £bn vs. TME as % of GDP (2001 to 2024)"
+            }
+          },
+          scales: {
+            y: {
+              type: "linear",
+              display: true,
+              position: "left",
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: "£bn"
+              }
+            },
+            y1: {
+              type: "linear",
+              display: true,
+              position: "right",
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: "% of GDP"
+              },
+              grid: {
+                drawOnChartArea: false
+              }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

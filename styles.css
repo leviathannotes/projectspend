@@ -1,0 +1,144 @@
+/* Root Variables for the new palette */
+:root {
+  --nav-blue: #004080;      /* Navigation bar blue */
+  --beige-bg: #F9F4E8;      /* Soft beige background */
+  --accent-text: #fdfbf2;   /* Light text for contrast on dark backgrounds */
+  --text-color: #333;       /* Default text color */
+}
+
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--beige-bg);
+  color: var(--text-color);
+}
+
+/* Navigation Bar using two containers */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--nav-blue);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  padding: 0 15px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Logo container */
+.logo-container {
+  flex: 0 0 auto;
+}
+.logo-container .nav-logo {
+  max-height: 60px;
+  width: auto;
+}
+
+/* Navigation links container */
+.nav-links-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.nav-links-container ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.nav-links-container ul li {
+  margin: 0 15px;
+}
+.nav-links-container ul li a {
+  color: var(--accent-text);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease-in-out;
+}
+.nav-links-container ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Page Content */
+h1 {
+  text-align: center;
+  margin-top: 80px; /* account for fixed nav */
+  font-size: 24px;
+  color: var(--nav-blue);
+}
+p {
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Chart Container */
+.chart-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 60vh; /* fits most of the screen without scrolling */
+}
+#spendingChart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Table Styles */
+table {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+th {
+  background-color: var(--nav-blue);
+  color: var(--accent-text);
+}
+td {
+  background-color: #fafafa;
+}
+tr:nth-child(even) td {
+  background-color: #f2f2f2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+  }
+  .nav-links-container ul {
+    flex-direction: column;
+  }
+  .nav-links-container ul li {
+    margin: 5px 0;
+  }
+  .chart-container, table {
+    width: 95%;
+    height: auto;
+  }
+}
